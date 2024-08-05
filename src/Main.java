@@ -1,85 +1,99 @@
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class Main {
 
-	private static final List<Lawn> listOfLawns = new ArrayList<>(5);
+    static int kilogramsOfCarrotsOnBase = 0;
+    static int remainingAttempts = 10;
 
-	public List<Lawn> getListOfLawns() {
-		return listOfLawns;
-	}
+    private static final int[] lawns = {0, 0, 0, 0, 0};
 
-	static int kilogramsOfcarrotsOnBase = 0;
+    public static void main(String[] args) {
 
-	public static void main(String[] args) {
-		Scanner scanner = new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in);
 
-		for (int i = 0; i < 5; i++) {
-			System.out.print("Enter number of carrots in " + (i + 1) + " lawn: ");
-			listOfLawns.add(i, new Lawn(scanner.nextInt()));
-		}
+        for (int i = 0; i < 5; i++) {
+            System.out.print("Enter number of carrots in " + (i + 1) + " lawn: ");
+            lawns[i] = scanner.nextInt();
+        }
 
-		int remainingAttempts = 10;
-		int firstPhase = (listOfLawns.get(4).getNumberOfCarrots());
+        int head = 0;
+        int tail = 3;
 
-		if (firstPhase < 10) {
-			kilogramsOfcarrotsOnBase = 5 * firstPhase;
-			remainingAttempts = remainingAttempts - firstPhase;
-		} else {
-			kilogramsOfcarrotsOnBase = 50;
-		}
+        if (lawns[4] >= 10) {
+            kilogramsOfCarrotsOnBase = 50;
+        } else {
 
-		if (kilogramsOfcarrotsOnBase < 50) {
-			for (int i = 0; i < remainingAttempts; remainingAttempts--) {
-				if (listOfLawns.get(0).getNumberOfCarrots() > 0 & listOfLawns.get(3).getNumberOfCarrots() > 0 & kilogramsOfcarrotsOnBase < 50) {
-					listOfLawns.get(0).setNumberOfCarrots(listOfLawns.get(0).getNumberOfCarrots() - 1);
-					listOfLawns.get(3).setNumberOfCarrots(listOfLawns.get(3).getNumberOfCarrots() - 1);
-					kilogramsOfcarrotsOnBase += 5;
-				}
-				if (kilogramsOfcarrotsOnBase == 50) {
-					break;
-				}
-			}
-			for (int i = 0; i < remainingAttempts; remainingAttempts--) {
-				if (listOfLawns.get(1).getNumberOfCarrots() > 0 & listOfLawns.get(2).getNumberOfCarrots() > 0 & kilogramsOfcarrotsOnBase < 50) {
-					listOfLawns.get(1).setNumberOfCarrots(listOfLawns.get(1).getNumberOfCarrots() - 1);
-					listOfLawns.get(2).setNumberOfCarrots(listOfLawns.get(2).getNumberOfCarrots() - 1);
-					kilogramsOfcarrotsOnBase += 5;
-				}
-				if (kilogramsOfcarrotsOnBase == 50) {
-					break;
-				}
-			}
+            kilogramsOfCarrotsOnBase = lawns[4] * 5;
+            remainingAttempts -= lawns[4];
 
-			if (remainingAttempts > 0 & listOfLawns.get(3).getNumberOfCarrots() > 0	) {
-				for (int i = 0; i < remainingAttempts; remainingAttempts--) {
-					if (kilogramsOfcarrotsOnBase < 50) {
-						listOfLawns.get(3).setNumberOfCarrots(listOfLawns.get(3).getNumberOfCarrots() - 1);
-						kilogramsOfcarrotsOnBase += 4;
-					}
-				}
-			}
-			if (remainingAttempts > 0 & listOfLawns.get(2).getNumberOfCarrots() > 0	) {
-				for (int i = 0; i < remainingAttempts; remainingAttempts--) {
-					listOfLawns.get(2).setNumberOfCarrots(listOfLawns.get(2).getNumberOfCarrots() - 1);
-					kilogramsOfcarrotsOnBase += 3;
-				}
-			}
-			if (remainingAttempts > 0 & listOfLawns.get(1).getNumberOfCarrots() > 0	) {
-				for (int i = 0; i < remainingAttempts; remainingAttempts--) {
-					listOfLawns.get(1).setNumberOfCarrots(listOfLawns.get(1).getNumberOfCarrots() - 1);
-					kilogramsOfcarrotsOnBase += 2;
-				}
-			}
-			if (remainingAttempts > 0 & listOfLawns.get(0).getNumberOfCarrots() > 0	) {
-				for (int i = 0; i < remainingAttempts; remainingAttempts--) {
-					listOfLawns.get(0).setNumberOfCarrots(listOfLawns.get(0).getNumberOfCarrots() - 1);
-					kilogramsOfcarrotsOnBase += 1;
-				}
-			}
-		}
+            while (remainingAttempts > 0) {
+                if (lawns[tail] > 0 & lawns[head] > 0 & kilogramsOfCarrotsOnBase < 50) {
+                    lawns[head] -= 1;
+                    lawns[tail] -= 1;
+                    kilogramsOfCarrotsOnBase += 5;
+                    remainingAttempts--;
+                } else if (lawns[tail - 1] > 0 & lawns[head + 1] > 0 & kilogramsOfCarrotsOnBase < 50) {
+                    lawns[head + 1] -= 1;
+                    lawns[tail - 1] -= 1;
+                    kilogramsOfCarrotsOnBase += 5;
+                    remainingAttempts--;
+                } else if (lawns[tail - 1] > 0 & lawns[head] > 1 & kilogramsOfCarrotsOnBase < 50) {
+                    lawns[head] -= 2;
+                    lawns[tail - 1] -= 1;
+                    kilogramsOfCarrotsOnBase += 5;
+                    remainingAttempts--;
+                } else if (lawns[tail - 2] > 1 & lawns[head] > 0 & kilogramsOfCarrotsOnBase < 50) {
+                    lawns[head] -= 1;
+                    lawns[tail - 2] -= 2;
+                    kilogramsOfCarrotsOnBase += 5;
+                    remainingAttempts--;
+                } else if (lawns[tail - 2] > 0 & lawns[head] > 2 & kilogramsOfCarrotsOnBase < 50) {
+                    lawns[head] -= 3;
+                    lawns[tail - 2] -= 1;
+                    kilogramsOfCarrotsOnBase += 5;
+                    remainingAttempts--;
+                } else if (lawns[head] > 4 & kilogramsOfCarrotsOnBase < 50) {
+                    lawns[head] -= 5;
+                    kilogramsOfCarrotsOnBase += 5;
+                    remainingAttempts--;
+                } else if (lawns[tail] > 0 & kilogramsOfCarrotsOnBase < 50) {
+                    lawns[tail] -= 1;
+                    kilogramsOfCarrotsOnBase += 4;
+                    remainingAttempts--;
+                } else if (lawns[tail - 1] > 0 & kilogramsOfCarrotsOnBase < 50) {
+                    lawns[tail - 1] -= 1;
+                    kilogramsOfCarrotsOnBase += 3;
+                    remainingAttempts--;
+                } else if (lawns[tail - 2] > 1 & kilogramsOfCarrotsOnBase < 50) {
+                    lawns[tail - 2] -= 2;
+                    kilogramsOfCarrotsOnBase += 4;
+                    remainingAttempts--;
+                } else if (lawns[tail - 2] > 0 & kilogramsOfCarrotsOnBase < 50) {
+                    lawns[tail - 2] -= 1;
+                    kilogramsOfCarrotsOnBase += 2;
+                    remainingAttempts--;
+                } else if (lawns[head] > 3 & kilogramsOfCarrotsOnBase < 50) {
+                    lawns[head] -= 4;
+                    kilogramsOfCarrotsOnBase += 4;
+                    remainingAttempts--;
+                } else if (lawns[head] > 2 & kilogramsOfCarrotsOnBase < 50) {
+                    lawns[head] -= 3;
+                    kilogramsOfCarrotsOnBase += 3;
+                    remainingAttempts--;
+                } else if (lawns[head] > 1 & kilogramsOfCarrotsOnBase < 50) {
+                    lawns[head] -= 2;
+                    kilogramsOfCarrotsOnBase += 2;
+                    remainingAttempts--;
+                } else if (lawns[head] > 0) {
+                    lawns[head] -= 1;
+                    kilogramsOfCarrotsOnBase += 1;
+                    remainingAttempts--;
+                } else {
+                    break;
+                }
+            }
 
-		System.out.println(kilogramsOfcarrotsOnBase + " kilograms of carrots captured");
-	}
+            System.out.println(kilogramsOfCarrotsOnBase + " kilograms of carrots captured");
+        }
+    }
 }
